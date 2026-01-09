@@ -8,9 +8,8 @@ import triton.language as tl
 
 from flag_gems import runtime
 from flag_gems.runtime import torch_device_fn
-from flag_gems.utils import dim_compress, libentry, libtuner
+from flag_gems.utils import dim_compress, libentry, libtuner, tl_extra_shim
 from flag_gems.utils import triton_lang_extension as tle
-from flag_gems.utils import tl_extra_shim
 
 _isnan = tl_extra_shim.isnan
 
@@ -201,6 +200,7 @@ def nansum_dim_kernel(
     s = tl.sum(acc, axis=1)[:, None]
     tl.store(out, s, row_mask)
 
+
 def nansum_comm(inp, *, dtype=None, out=None):
     M = inp.numel()
     if dtype is None:
@@ -219,12 +219,12 @@ def nansum_comm(inp, *, dtype=None, out=None):
         nansum_kernel_2[(1, 1, 1)](mid, out, mid_size, block_mid)
     return out
 
+
 def nansum_dim_comm(inp, dim=None, keepdim=False, *, dtype=None, out=None):
     if dtype is None:
         dtype = inp.dtype
         if dtype is torch.bool:
             dtype = torch.int64
-
 
     if dim == []:
         if not keepdim:

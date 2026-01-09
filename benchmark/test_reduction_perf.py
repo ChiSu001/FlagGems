@@ -264,7 +264,9 @@ class NansumBenchmark(UnaryReductionBenchmark):
 
 @pytest.mark.nansum
 def test_perf_nansum():
-    bench = NansumBenchmark(op_name="nansum", torch_op=torch.nansum, dtypes=FLOAT_DTYPES)
+    bench = NansumBenchmark(
+        op_name="nansum", torch_op=torch.nansum, dtypes=FLOAT_DTYPES
+    )
     bench.run()
 
 
